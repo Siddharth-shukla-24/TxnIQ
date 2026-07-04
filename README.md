@@ -12,8 +12,6 @@ Built with **FastAPI**, **Celery**, **Redis**, **PostgreSQL**, and **Google Gemi
 
 ![Architecture Diagram](docs/architecture.png)
 
-> *Full diagram available on [draw.io](https://drive.google.com/your-diagram-link-here)*
-
 ```
 Client (curl / Postman)
         │
