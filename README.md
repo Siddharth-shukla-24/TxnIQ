@@ -122,7 +122,7 @@ backend-devops-assignment/
 
 ```bash
 git clone https://github.com/your-username/backend-devops-assignment.git
-cd backend-devops-assignment
+cd backend_devops_assignment
 ```
 
 ### 2. Configure environment variables
