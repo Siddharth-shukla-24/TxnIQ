@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Stage 1: Builder — identical to Dockerfile.api
+# ─────────────────────────────────────────────────────────────────────────────
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+COPY requirements.txt .
+
+RUN pip install --upgrade pip --no-cache-dir \
+    && pip install --no-cache-dir -r requirements.txt
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Stage 2: Runtime
+# ─────────────────────────────────────────────────────────────────────────────
+FROM python:3.11-slim AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+RUN groupadd --gid 1001 appgroup \
+    && useradd --uid 1001 --gid appgroup --no-create-home appuser
+
+WORKDIR /app
+
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+COPY ./app ./app
+COPY ./alembic ./alembic
+COPY ./alembic.ini ./alembic.ini
+
+RUN mkdir -p /app/uploads && chown -R appuser:appgroup /app
+
+USER appuser
+
+# ─────────────────────────────────────────────────────────────────────────────
+# The only difference from Dockerfile.api: this starts a Celery worker,
+# not a Uvicorn/FastAPI server.
+#
+# Breaking down the command:
+#   celery              → the Celery CLI
+#   -A app.workers.celery_app.celery_app
+#                       → -A means "app" — tells Celery where the Celery
+#                         instance lives: module path + variable name
+#   worker              → start in worker mode (as opposed to beat/scheduler mode)
+#   --loglevel=info     → log INFO and above
+#   --concurrency=2     → run 2 concurrent worker threads
+#                         For I/O-bound tasks (LLM calls, DB writes), concurrency
+#                         helps — while one thread waits for Gemini's response,
+#                         the other processes a different job.
+#                         For CPU-bound tasks, you'd set this to number of CPU cores.
+# ─────────────────────────────────────────────────────────────────────────────
+CMD ["celery", "-A", "app.workers.celery_app.celery_app", "worker", "--loglevel=info", "--concurrency=2"]
