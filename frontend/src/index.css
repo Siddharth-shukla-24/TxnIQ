@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0a0a0a;
+    color: #ffffff;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-[#111111] border border-[#1f1f1f] rounded-2xl p-6;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium tracking-wide;
+  }
+
+  .table-row {
+    @apply border-b border-[#1a1a1a] hover:bg-white/[0.02] transition-colors duration-100;
+  }
+
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-black text-sm font-semibold rounded-xl hover:bg-white/90 transition-all duration-150 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 px-4 py-2.5 bg-transparent border border-[#2a2a2a] text-[#a1a1aa] hover:text-white hover:border-[#3a3a3a] text-sm font-medium rounded-xl transition-all duration-150 active:scale-[0.98];
+  }
+
+  .input-file-zone {
+    @apply relative border border-dashed border-[#2a2a2a] rounded-2xl p-12 text-center transition-all duration-200 cursor-pointer hover:border-[#3a3a3a] hover:bg-white/[0.015];
+  }
+
+  .input-file-zone-active {
+    @apply border-white/30 bg-white/[0.03];
+  }
+
+  .section-label {
+    @apply text-[11px] font-semibold uppercase tracking-widest text-[#555555];
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold tracking-tight text-white;
+  }
+}

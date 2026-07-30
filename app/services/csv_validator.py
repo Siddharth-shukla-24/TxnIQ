@@ -82,7 +82,16 @@ async def validate_csv(file: UploadFile) -> bytes:
     if missing:
         raise HTTPException(
             status_code=400,
-            detail=f"CSV is missing required columns: {sorted(missing)}",
+            detail={
+                "error_code": "INVALID_CSV_SCHEMA",
+                "title": "Invalid CSV Format",
+                "description": (
+                    "The uploaded file doesn't match the required "
+                    "TxnIQ transaction schema."
+                ),
+                "required_columns": sorted(REQUIRED_COLUMNS),
+                "missing_columns": sorted(missing),
+            },
         )
 
     logger.info(

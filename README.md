@@ -1,6 +1,5 @@
 # AI-Powered Transaction Processing Pipeline
 
-> Backend + DevOps Internship Assignment — Alemeno
 
 A production-grade asynchronous backend API that ingests dirty financial transaction CSVs, processes them through a multi-stage pipeline (cleaning → anomaly detection → LLM classification → narrative summary), and exposes structured results via a polling API.
 
@@ -392,6 +391,4 @@ docker compose up --build
 
 ## Submission
 
-- **GitHub Repository**: [github.com/your-username/backend-devops-assignment](https://github.com/your-username/backend-devops-assignment)
-- **Architecture Diagram**: [draw.io link]
-- **Technical Review Video**: [Loom/Zoom link]
+- **GitHub Repository**: [\[github.com/Siddharth-Shukla-24/backend-devops-assignment\](https://github.com/your-username/backend-devops-assignment)](https://github.com/Siddharth-shukla-24/ai-transaction-pipeline)

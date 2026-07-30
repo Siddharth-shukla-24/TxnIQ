@@ -1,10 +1,11 @@
 """
 Job API routes.
 
-POST /jobs/upload          → validate CSV, create Job, queue processing
-GET  /jobs/{job_id}/status → poll job state
+POST /jobs/upload           → validate CSV, create Job, queue processing
+GET  /jobs/{job_id}/status  → poll job state
 GET  /jobs/{job_id}/results → full structured output
-GET  /jobs                 → list all jobs with optional ?status= filter
+GET  /jobs                  → list all jobs with optional ?status= filter
+GET  /jobs/sample-csv       → download a sample CSV template
 """
 
 import asyncio
@@ -14,6 +15,7 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
+from fastapi.responses import StreamingResponse
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -30,7 +32,7 @@ from app.schemas.job import (
     JobListItem,
 )
 from app.schemas.transaction import JobResultsResponse, TransactionSchema, CategoryBreakdown
-from app.services.csv_validator import validate_csv
+from app.services.csv_validator import validate_csv, REQUIRED_COLUMNS
 from app.workers.tasks import process_job
 from app.config import settings
 
@@ -54,6 +56,35 @@ def _write_file(path: str, contents: bytes) -> None:
     """
     with open(path, "wb") as f:
         f.write(contents)
+
+
+# ── GET /jobs/sample-csv ──────────────────────────────────────────────────────
+
+# Sample rows that demonstrate the expected CSV schema.
+# Intentionally small — just enough for users to understand the format.
+_SAMPLE_CSV = (
+    "txn_id,date,merchant,amount,currency,status,category,account_id,notes\n"
+    "TXN0001,2024-01-15,Amazon,2499.99,INR,SUCCESS,Shopping,ACC001,Gift purchase\n"
+    "TXN0002,2024-01-16,Swiggy,450.00,INR,SUCCESS,Food,ACC002,\n"
+    "TXN0003,2024-01-17,Ola,189.50,INR,FAILED,Transport,ACC001,Refund expected\n"
+)
+
+
+@router.get("/sample-csv", tags=["jobs"])
+async def download_sample_csv():
+    """
+    Returns a minimal sample CSV file that demonstrates the required schema.
+
+    Useful for users who receive an "Invalid CSV Format" error and need a
+    quick reference for the expected column layout.
+    """
+    return StreamingResponse(
+        iter([_SAMPLE_CSV]),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": 'attachment; filename="txniq_sample.csv"'
+        },
+    )
 
 
 # ── POST /jobs/upload ─────────────────────────────────────────────────────────
