@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useJobs } from '@/hooks/useJobs'
 import StatusBadge from '@/components/StatusBadge'
-import { Layers, ArrowRight, RefreshCw } from 'lucide-react'
+import { Layers, ArrowRight, RefreshCw, Inbox } from 'lucide-react'
 import { formatDistanceToNow } from '@/lib/utils'
 import type { JobStatus } from '@/types'
 import clsx from 'clsx'
@@ -36,16 +36,18 @@ export default function JobsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 mb-5 flex-wrap">
+      <div className="flex gap-2 mb-5 flex-wrap" role="tablist" aria-label="Filter jobs by status">
         {STATUS_FILTERS.map((s) => (
           <button
             key={s}
             onClick={() => setFilter(s)}
+            role="tab"
+            aria-selected={filter === s}
             className={clsx(
-              'px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all duration-150',
+              'px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all duration-150 border',
               filter === s
-                ? 'bg-white text-black'
-                : 'bg-white/[0.03] border border-[#1f1f1f] text-[#666] hover:text-[#ccc] hover:border-[#2a2a2a]'
+                ? 'bg-white text-black border-white'
+                : 'bg-white/[0.03] border-[#1f1f1f] text-[#666] hover:text-[#ccc] hover:border-[#2a2a2a]'
             )}
           >
             {s}
@@ -59,15 +61,15 @@ export default function JobsPage() {
             {Array.from({ length: 7 }).map((_, i) => (
               <div
                 key={i}
-                className="h-12 bg-white/[0.02] rounded-xl animate-pulse"
+                className="h-12 skeleton"
                 style={{ opacity: 1 - i * 0.12 }}
               />
             ))}
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-12 h-12 bg-white/[0.03] border border-[#1f1f1f] rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Layers className="w-5 h-5 text-[#444]" />
+          <div className="empty-state">
+            <div className="icon-box-lg bg-white/[0.03] border border-[#1f1f1f] mx-auto mb-4">
+              <Inbox className="w-5 h-5 text-[#444]" />
             </div>
             <p className="text-sm font-medium text-[#888]">No jobs found</p>
             <p className="text-xs text-[#444] mt-1">
@@ -78,7 +80,7 @@ export default function JobsPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#161616]">
+                <tr className="border-b border-[#1a1a1a]">
                   {['File', 'Status', 'Raw Rows', 'Job ID', 'Created', ''].map((h) => (
                     <th key={h} className="px-5 py-3.5 text-left">
                       <span className="section-label">{h}</span>
@@ -93,9 +95,9 @@ export default function JobsPage() {
                     onClick={() => navigate(`/jobs/${job.job_id}`)}
                     className="table-row cursor-pointer group"
                   >
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 bg-white/[0.03] border border-[#1f1f1f] rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div className="icon-box-sm bg-white/[0.04] border border-white/[0.06]">
                           <Layers className="w-3.5 h-3.5 text-[#555]" />
                         </div>
                         <span className="text-sm font-medium text-white truncate max-w-[180px]">
@@ -103,19 +105,19 @@ export default function JobsPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3.5">
                       <StatusBadge status={job.status as JobStatus} />
                     </td>
-                    <td className="px-5 py-4 text-sm text-[#666] font-mono tabular-nums">
+                    <td className="px-5 py-3.5 text-sm text-[#666] font-mono tabular-nums">
                       {job.row_count_raw ?? '—'}
                     </td>
-                    <td className="px-5 py-4 text-xs text-[#444] font-mono">
+                    <td className="px-5 py-3.5 text-xs text-[#444] font-mono">
                       {job.job_id.slice(0, 8)}…
                     </td>
-                    <td className="px-5 py-4 text-sm text-[#555]">
+                    <td className="px-5 py-3.5 text-sm text-[#555]">
                       {formatDistanceToNow(job.created_at)}
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3.5">
                       <ArrowRight className="w-4 h-4 text-[#2a2a2a] group-hover:text-[#555] transition-colors" />
                     </td>
                   </tr>

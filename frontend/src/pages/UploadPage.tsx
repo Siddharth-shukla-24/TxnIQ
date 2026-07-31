@@ -122,7 +122,7 @@ export default function UploadPage() {
               onChange={onFileChange}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
-            <div className="w-12 h-12 bg-white/[0.04] border border-white/[0.06] rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="icon-box-lg bg-white/[0.04] border border-white/[0.06] mx-auto mb-4">
               <Upload className="w-5 h-5 text-[#555]" />
             </div>
             <p className="text-sm font-medium text-[#ccc]">
@@ -135,7 +135,7 @@ export default function UploadPage() {
 
           {file && (
             <div className="mt-3 flex items-center gap-3 px-4 py-3.5 bg-white/[0.03] border border-[#1f1f1f] rounded-xl animate-slide-up">
-              <div className="w-8 h-8 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="icon-box-md bg-blue-500/10 border border-blue-500/20">
                 <FileText className="w-4 h-4 text-blue-400" />
               </div>
               <div className="flex-1 min-w-0">
@@ -274,10 +274,10 @@ export default function UploadPage() {
       {/* Error — Structured CSV Schema Error */}
       {uploadState === 'error' && schemaError && (
         <div className="mt-4 space-y-3 animate-slide-up">
-          <div className="px-5 py-5 bg-red-500/[0.04] border border-red-500/15 rounded-xl">
+          <div className="px-5 py-5 bg-red-500/[0.04] border border-red-500/15 rounded-2xl">
             {/* Header */}
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-9 h-9 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="icon-box-md bg-red-500/10 border border-red-500/20 mt-0.5">
                 <AlertCircle className="w-[18px] h-[18px] text-red-400" />
               </div>
               <div>
@@ -290,7 +290,7 @@ export default function UploadPage() {
 
             {/* Required columns */}
             <div className="mt-4 pt-4 border-t border-red-500/10">
-              <p className="text-[11px] font-semibold text-[#777] uppercase tracking-wider mb-3">
+              <p className="section-label mb-3">
                 Required Columns
               </p>
               <div className="grid grid-cols-3 gap-1.5">
@@ -341,7 +341,7 @@ export default function UploadPage() {
       {/* Error — Generic fallback */}
       {uploadState === 'error' && !schemaError && (
         <div className="mt-4 space-y-3 animate-slide-up">
-          <div className="flex items-start gap-3 px-4 py-4 bg-red-500/5 border border-red-500/15 rounded-xl">
+          <div className="alert-error">
             <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-red-400">Processing failed</p>

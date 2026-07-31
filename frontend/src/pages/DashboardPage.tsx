@@ -10,7 +10,7 @@ import {
   Clock,
   ArrowRight,
   Upload,
-  AlertTriangle,
+  Inbox,
 } from 'lucide-react'
 import type { JobListItem, JobStatus } from '@/types'
 import { formatDistanceToNow } from '@/lib/utils'
@@ -69,7 +69,7 @@ export default function DashboardPage() {
           value={isLoading ? '—' : failed}
           icon={XCircle}
           iconColor="text-red-400"
-          sub="Check logs for errors"
+          sub="Requires attention"
         />
         <StatCard
           label="In Progress"
@@ -133,7 +133,7 @@ function JobRow({ job, onClick }: { job: JobListItem; onClick: () => void }) {
     <tr className="table-row cursor-pointer group" onClick={onClick}>
       <td className="px-5 py-3.5">
         <div className="flex items-center gap-3">
-          <div className="w-7 h-7 bg-white/[0.04] border border-white/[0.06] rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="icon-box-sm bg-white/[0.04] border border-white/[0.06]">
             <Layers className="w-3.5 h-3.5 text-[#555]" />
           </div>
           <span className="text-sm text-white font-medium truncate max-w-[180px]">
@@ -151,7 +151,7 @@ function JobRow({ job, onClick }: { job: JobListItem; onClick: () => void }) {
         {formatDistanceToNow(job.created_at)}
       </td>
       <td className="px-5 py-3.5">
-        <ArrowRight className="w-4 h-4 text-[#333] group-hover:text-[#666] transition-colors" />
+        <ArrowRight className="w-4 h-4 text-[#2a2a2a] group-hover:text-[#555] transition-colors" />
       </td>
     </tr>
   )
@@ -159,11 +159,11 @@ function JobRow({ job, onClick }: { job: JobListItem; onClick: () => void }) {
 
 function LoadingSkeleton({ rows }: { rows: number }) {
   return (
-    <div className="p-5 space-y-2.5">
+    <div className="p-6 space-y-2.5">
       {Array.from({ length: rows }).map((_, i) => (
         <div
           key={i}
-          className="h-10 bg-white/[0.02] rounded-xl animate-pulse"
+          className="h-10 skeleton"
           style={{ opacity: 1 - i * 0.15 }}
         />
       ))}
@@ -174,9 +174,9 @@ function LoadingSkeleton({ rows }: { rows: number }) {
 function EmptyState() {
   const navigate = useNavigate()
   return (
-    <div className="text-center py-16 px-6">
-      <div className="w-12 h-12 bg-white/[0.03] border border-[#1f1f1f] rounded-2xl flex items-center justify-center mx-auto mb-4">
-        <AlertTriangle className="w-5 h-5 text-[#444]" />
+    <div className="empty-state">
+      <div className="icon-box-lg bg-white/[0.03] border border-[#1f1f1f] mx-auto mb-4">
+        <Inbox className="w-5 h-5 text-[#444]" />
       </div>
       <p className="text-sm font-medium text-[#888]">No jobs yet</p>
       <p className="text-xs text-[#444] mt-1 mb-5">
