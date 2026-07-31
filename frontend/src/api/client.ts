@@ -1,9 +1,4 @@
-import axios, { type AxiosError, type AxiosInstance, type AxiosResponse } from 'axios'
-
-interface ApiErrorResponse {
-  detail?: string | Record<string, unknown>
-  message?: string
-}
+import axios, { type AxiosInstance } from 'axios'
 
 /**
  * Custom error class that preserves structured error details from the API.
